@@ -1,0 +1,12 @@
+__pycache__/
+.idea/
+.venv/
+__pycache__/*.py[cod]
+*.pyc
+test.py
+compile.py
+apigen.py
+Makefile
+dist/
+nowpayment.egg-info/
+main.py
