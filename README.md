@@ -1,4 +1,4 @@
-# nowpayment - A payment gateway client for NowPayments.io
+## nowpayment - A payment gateway client for NowPayments.io
 
 ## Installation
 
@@ -6,7 +6,7 @@
 pip install nowpayment
 ```
 
-## Supported APIS
+## Supported APIs
 
 - [x] Payments  API
 - [x] Currency API

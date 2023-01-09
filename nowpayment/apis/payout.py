@@ -15,7 +15,6 @@ class PayoutAPI(BaseAPI):
         :return: Payout data.
         :rtype: dict
         """
-        url = "https://api.nowpayments.io/v1/payout"
         data = {
             "address": address,
             "currency": currency,
@@ -23,7 +22,7 @@ class PayoutAPI(BaseAPI):
             **kwargs
         }
         data.update(kwargs)
-        return self._request('POST', url, data=data)
+        return self._request('POST', "payout", data=data)
 
     def get_payout_status(self, payout_id: str) -> dict:
         """
@@ -33,8 +32,7 @@ class PayoutAPI(BaseAPI):
         :return: Payout data.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/payout/{payout_id}"
-        return self._request('GET', url)
+        return self._request('GET', f"payout/{payout_id}")
 
     def get_balance(self) -> dict:
         """
@@ -43,8 +41,7 @@ class PayoutAPI(BaseAPI):
         :return: Payout balance.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/balance"
-        return self._request('GET', url)
+        return self._request('GET', "balance")
 
     @jwt_required
     def verify_payout(self, withdrawals_id: str) -> dict:
@@ -55,5 +52,4 @@ class PayoutAPI(BaseAPI):
         :return: Payout data.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/payout/f{withdrawals_id}/verify"
-        return self._request('POST', url)
+        return self._request('POST', f"payout/{withdrawals_id}/verify")

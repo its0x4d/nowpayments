@@ -12,7 +12,7 @@ class BaseAPI:
         self.api_key = api_key
         self.jwt_token = jwt_token
 
-    def _request(self, method: str, url: str, **kwargs):
+    def _request(self, method: str, path: str, **kwargs):
         """Make request to API.
 
         Args:
@@ -29,7 +29,7 @@ class BaseAPI:
         }
         if self.jwt_token:
             headers['Authorization'] = self.jwt_token
-
+        url = f"https://api.nowpayments.io/v1/{path}"
         return requests.request(
             method,
             url,
@@ -43,5 +43,4 @@ class BaseAPI:
         Returns:
             dict: Status of the API.
         """
-        url = "https://api.nowpayments.io/v1/status"
-        return self._request('GET', url)
+        return self._request('GET', "status")

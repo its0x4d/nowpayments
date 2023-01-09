@@ -16,11 +16,12 @@ class PaymentAPI(BaseAPI):
         :return: Estimated price.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/estimate?" \
-              f"amount={amount}&" \
-              f"currency_from={from_currency}&" \
-              f"currency_to={to_currency}"
-        return self._request('GET', url)
+        params = {
+            "amount": amount,
+            "currency_from": from_currency,
+            "currency_to": to_currency
+        }
+        return self._request('GET', "estimate", params=params)
 
     def create_payment(
             self,
@@ -47,7 +48,6 @@ class PaymentAPI(BaseAPI):
         :return: Payment.
         :rtype: dict
         """
-        url = "https://api.nowpayments.io/v1/payment"
         data = {
             "price_amount": price_amount,
             "price_currency": price_currency,
@@ -56,7 +56,7 @@ class PaymentAPI(BaseAPI):
             "ipn_callback_url": ipn_callback_url,
             **kwargs
         }
-        return self._request('POST', url, json=data)
+        return self._request('POST', "payment", json=data)
 
     def create_invoice_payment(self, invoice_id: str, pay_currency: str, **kwargs) -> dict:
         """
@@ -68,13 +68,12 @@ class PaymentAPI(BaseAPI):
         :return: Invoice payment.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/invoice-payment"
         data = {
             "iid": invoice_id,
             "pay_currency": pay_currency,
             **kwargs
         }
-        return self._request('POST', url, json=data)
+        return self._request('POST', "invoice-payment", json=data)
 
     def get_payment_estimated(self, payment_id: str) -> dict:
         """
@@ -84,8 +83,7 @@ class PaymentAPI(BaseAPI):
         :return: Payment estimated.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/payment/{payment_id}/update-merchant-estimate"
-        return self._request('GET', url)
+        return self._request('GET', f"payment/{payment_id}/update-merchant-estimate")
 
     def get_payment_status(self, payment_id: str) -> dict:
         """
@@ -95,8 +93,7 @@ class PaymentAPI(BaseAPI):
         :return: Payment status.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/payment/{payment_id}"
-        return self._request('GET', url)
+        return self._request('GET', f"payment/{payment_id}")
 
     def get_minimum_payment_amount(self, from_currency: str, to_currency: str) -> dict:
         """
@@ -107,10 +104,11 @@ class PaymentAPI(BaseAPI):
         :return: Minimum payment amount.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/min-amount?" \
-              f"currency_from={from_currency}&" \
-              f"currency_to={to_currency}"
-        return self._request('GET', url)
+        params = {
+            "currency_from": from_currency,
+            "currency_to": to_currency
+        }
+        return self._request('GET', "min-amount", params=params)
 
     @jwt_required
     def get_payment_list(
@@ -135,14 +133,15 @@ class PaymentAPI(BaseAPI):
         :return: Payment list.
         :rtype: dict
         """
-        url = f"https://api.nowpayments.io/v1/payment?" \
-              f"limit={limit}&" \
-              f"page={page}&" \
-              f"sortBy={sort_by}&" \
-              f"orderBy={order_by}&" \
-              f"dateFrom={date_from}&" \
-              f"dateTo={date_to}"
-        return self._request('GET', url)
+        params = {
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "orderBy": order_by,
+            "dateFrom": date_from,
+            "dateTo": date_to
+        }
+        return self._request('GET', "payment", params=params)
 
     def create_invoice(self, price_amount: Union[int, float], price_currency: str, **kwargs) -> dict:
         """
@@ -157,10 +156,9 @@ class PaymentAPI(BaseAPI):
         :return: Invoice.
         :rtype: dict
         """
-        url = "https://api.nowpayments.io/v1/invoice"
         data = {
             "price_amount": price_amount,
             "price_currency": price_currency,
             **kwargs
         }
-        return self._request('POST', url, json=data)
+        return self._request('POST', 'invoice', json=data)

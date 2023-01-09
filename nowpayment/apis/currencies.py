@@ -13,10 +13,10 @@ class CurrencyAPI(BaseAPI):
         :return: Available currencies.
         :rtype: dict
         """
-        url = "https://api.nowpayments.io/v1/currencies"
+        params = {}
         if 'fixed_rate' in kwargs:
-            url += f'?fixed_rate={kwargs["fixed_rate"]}'
-        return self._request('GET', url)
+            params['fixed_rate'] = kwargs['fixed_rate']
+        return self._request('GET', "currencies", params=params)
 
     def get_available_currencies_v2(self) -> dict:
         """
@@ -25,8 +25,7 @@ class CurrencyAPI(BaseAPI):
         :return: All currencies.
         :rtype: dict
         """
-        url = "https://api.nowpayments.io/v1/full-currencies"
-        return self._request('GET', url)
+        return self._request('GET', "full-currencies")
 
     def get_available_checked_currencies(self, **kwargs) -> dict:
         """
@@ -39,8 +38,7 @@ class CurrencyAPI(BaseAPI):
         :return: All currencies.
         :rtype: dict
         """
-        url = "https://api.nowpayments.io/v1/merchant/coins"
+        params = {}
         if 'fixed_rate' in kwargs:
-            url += f'?fixed_rate={kwargs["fixed_rate"]}'
-
-        return self._request('GET', url)
+            params['fixed_rate'] = kwargs['fixed_rate']
+        return self._request('GET', "merchant/coins", params=params)
