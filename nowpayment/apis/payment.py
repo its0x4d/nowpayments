@@ -83,7 +83,7 @@ class PaymentAPI(BaseAPI):
         :return: Payment estimated.
         :rtype: dict
         """
-        return self._request('GET', f"payment/{payment_id}/update-merchant-estimate")
+        return self._request('POST', f"payment/{payment_id}/update-merchant-estimate")
 
     def get_payment_status(self, payment_id: str) -> dict:
         """
@@ -106,7 +106,8 @@ class PaymentAPI(BaseAPI):
         """
         params = {
             "currency_from": from_currency,
-            "currency_to": to_currency
+            "currency_to": to_currency,
+            "fiat_equivalent": "usd"
         }
         return self._request('GET', "min-amount", params=params)
 

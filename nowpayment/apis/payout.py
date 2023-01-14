@@ -1,8 +1,29 @@
+import json
+
 from nowpayment.apis import BaseAPI
 from nowpayment.decorators import jwt_required
 
 
 class PayoutAPI(BaseAPI):
+
+    def login(self, email: str, password: str) -> dict:
+        """
+        This is the method to log in to the payout system.
+
+        :param email: email
+        :param password: password
+        :return: JWT token.
+        :rtype: dict
+        """
+        data = {
+            'email': email,
+            'password': password
+        }
+        data = json.dumps(data)
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        return self._request('POST', "auth", data=data, headers=headers)
 
     def create_payout(self, address: str, currency: str, amount: str, **kwargs) -> dict:
         """
@@ -21,7 +42,6 @@ class PayoutAPI(BaseAPI):
             "amount": amount,
             **kwargs
         }
-        data.update(kwargs)
         return self._request('POST', "payout", data=data)
 
     def get_payout_status(self, payout_id: str) -> dict:
