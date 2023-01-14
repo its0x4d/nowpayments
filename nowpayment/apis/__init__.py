@@ -37,7 +37,6 @@ class BaseAPI:
         if headers is not Empty:
             set_headers = headers
         url = f"https://api.nowpayments.io/v1/{path}"
-        print(set_headers)
         req = requests.request(
             method,
             url,
