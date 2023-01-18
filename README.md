@@ -32,4 +32,4 @@ invoice = np.payment.create_invoice(
 currencies = np.currency.get_available_currencies()
 
 ```
-
+If you're looking for a more detailed example, check out the [example.py](https://github.com/its0x4d/nowpayments/tree/main/examples) file.
