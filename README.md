@@ -1,4 +1,7 @@
 ## nowpayment - A payment gateway client for NowPayments.io
+![PyPI - Downloads](https://img.shields.io/pypi/dw/nowpayment)
+![PyPI](https://img.shields.io/pypi/v/nowpayment)
+
 **[NOWPayments](https://nowpayments.io) is a noncustodial crypto payment gateway that lets you accept payments in 75+ cryptocurrencies and auto coin conversion supported.
 The gateway is designed to be simple and fast to integrate, with low fees and no minimum balance required. 
 It also supports instant settlement and has a variety of features, including integrated invoices and a donation page builder.**
