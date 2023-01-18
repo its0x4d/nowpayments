@@ -28,8 +28,8 @@ class PaymentAPI(BaseAPI):
             price_amount: Union[int, float],
             price_currency: str,
             pay_currency: str,
-            ipn_callback_url: str = None,
-            order_id: str = None,
+            ipn_callback_url: str,
+            order_id: str,
             **kwargs
     ) -> dict:
         """
