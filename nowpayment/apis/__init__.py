@@ -43,9 +43,11 @@ class BaseAPI:
             headers=set_headers,
             **kwargs
         )
-        if req.status_code == 200:
-            return req.json()
-        return req.content
+        if req.text == 'OK':
+            # This response is used for verify payout method!
+            # TODO: Refactor and create some better response
+            return {'status': 'OK'}
+        return req.json()
 
     def get_api_status(self) -> dict:
         """This is a method for obtaining the status of the API.
