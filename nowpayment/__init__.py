@@ -1,3 +1,7 @@
+import hashlib
+import hmac
+import json
+
 from nowpayment.apis.currencies import CurrencyAPI
 from nowpayment.apis.payment import PaymentAPI
 from nowpayment.apis.payout import PayoutAPI
@@ -29,3 +33,21 @@ class NowPayments:
         :rtype: dict
         """
         return self.payment.get_api_status()
+
+    @staticmethod
+    def verify_payment_signature(data: dict, ipn_secret: str) -> str:
+        """
+        This is a method for verifying the payment signature.
+
+        :param data: data
+        :param ipn_secret: ipn secret
+        :return: True if the signature is valid, False otherwise.
+        :rtype: bool
+        """
+        request_data = dict(sorted(data.items()))
+        sorted_request_json = json.dumps(request_data, separators=(',', ':'))
+        return hmac.new(
+            ipn_secret.encode('utf-8'),
+            sorted_request_json.encode('utf-8'),
+            hashlib.sha512
+        ).hexdigest()
