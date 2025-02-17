@@ -30,7 +30,7 @@ class BaseAPI:
             'x-api-key': self.api_key
         }
         if self.jwt_token:
-            set_headers['Authorization'] = self.jwt_token
+            set_headers['Authorization'] = "Bearer " + self.jwt_token
         if headers:
             set_headers = headers
         url = f"https://api.nowpayments.io/v1/{path}"
