@@ -5,25 +5,31 @@ import json
 from nowpayment.apis.currencies import CurrencyAPI
 from nowpayment.apis.payment import PaymentAPI
 from nowpayment.apis.payout import PayoutAPI
+from nowpayment.apis.billing import BillingAPI
 
 
 class NowPayments:
 
-    def __init__(self, api_key: str, jwt_token: str = None):
+    def __init__(self, api_key: str, jwt_token: str = None, timeout = None):
         self.api_key = api_key
         self.jwt_token = jwt_token
+        self.timeout = timeout
 
     @property
     def payment(self):
-        return PaymentAPI(self.api_key, self.jwt_token)
+        return PaymentAPI(self.api_key, jwt_token=self.jwt_token, timeout=self.timeout)
 
     @property
     def currency(self):
-        return CurrencyAPI(self.api_key, self.jwt_token)
+        return CurrencyAPI(self.api_key, jwt_token=self.jwt_token, timeout=self.timeout)
 
     @property
     def payout(self):
-        return PayoutAPI(self.api_key, self.jwt_token)
+        return PayoutAPI(self.api_key, jwt_token=self.jwt_token, timeout=self.timeout)
+
+    @property
+    def billing(self):
+        return BillingAPI(self.api_key, jwt_token=self.jwt_token, timeout=self.timeout)
 
     def get_api_status(self) -> dict:
         """

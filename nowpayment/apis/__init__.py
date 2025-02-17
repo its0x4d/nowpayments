@@ -3,10 +3,6 @@ from typing import Union
 import requests
 
 
-class Empty:
-    pass
-
-
 class BaseAPI:
     """Base API class.
 
@@ -14,11 +10,12 @@ class BaseAPI:
         api_key (str): API key.
     """
 
-    def __init__(self, api_key: str, jwt_token: str = None):
+    def __init__(self, api_key: str, jwt_token: str = None, timeout = None):
         self.api_key = api_key
         self.jwt_token = jwt_token
+        self.timeout = timeout
 
-    def _request(self, method: str, path: str, headers: Union[None, dict] = Empty, **kwargs):
+    def _request(self, method: str, path: str, headers: Union[None, dict] = None, **kwargs):
         """
         This is the method to make a request to the API.
 
@@ -34,13 +31,14 @@ class BaseAPI:
         }
         if self.jwt_token:
             set_headers['Authorization'] = self.jwt_token
-        if headers is not Empty:
+        if headers:
             set_headers = headers
         url = f"https://api.nowpayments.io/v1/{path}"
         req = requests.request(
             method,
             url,
             headers=set_headers,
+            timeout=self.timeout,
             **kwargs
         )
         if req.text == 'OK':
