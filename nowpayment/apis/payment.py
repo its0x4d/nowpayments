@@ -6,7 +6,13 @@ from nowpayment.decorators import jwt_required
 
 class PaymentAPI(BaseAPI):
 
-    def get_estimated_price(self, amount: Union[int, float], from_currency: str, to_currency: str) -> dict:
+    def get_estimated_price(
+            self,
+            amount: Union[int, float],
+            from_currency: str,
+            to_currency: str,
+            **kwargs
+    ) -> dict:
         """
         Get estimated price.
 
@@ -19,7 +25,8 @@ class PaymentAPI(BaseAPI):
         params = {
             "amount": amount,
             "currency_from": from_currency,
-            "currency_to": to_currency
+            "currency_to": to_currency,
+            **kwargs
         }
         return self._request('GET', "estimate", params=params)
 
@@ -58,7 +65,12 @@ class PaymentAPI(BaseAPI):
         }
         return self._request('POST', "payment", json=data)
 
-    def create_invoice_payment(self, invoice_id: str, pay_currency: str, **kwargs) -> dict:
+    def create_invoice_payment(
+            self,
+            invoice_id: str,
+            pay_currency: str,
+            **kwargs
+    ) -> dict:
         """
         Create invoice payment.
 
@@ -75,7 +87,10 @@ class PaymentAPI(BaseAPI):
         }
         return self._request('POST', "invoice-payment", json=data)
 
-    def get_payment_estimated(self, payment_id: str) -> dict:
+    def get_payment_estimated(
+            self,
+            payment_id: str
+    ) -> dict:
         """
         Get payment estimated.
 
@@ -85,7 +100,10 @@ class PaymentAPI(BaseAPI):
         """
         return self._request('POST', f"payment/{payment_id}/update-merchant-estimate")
 
-    def get_payment_status(self, payment_id: str) -> dict:
+    def get_payment_status(
+            self,
+            payment_id: str
+    ) -> dict:
         """
         Get payment status.
 
@@ -95,7 +113,12 @@ class PaymentAPI(BaseAPI):
         """
         return self._request('GET', f"payment/{payment_id}")
 
-    def get_minimum_payment_amount(self, from_currency: str, to_currency: str) -> dict:
+    def get_minimum_payment_amount(
+            self,
+            from_currency: str,
+            to_currency: str,
+            **kwargs
+    ) -> dict:
         """
         Get minimum payment amount.
 
@@ -107,7 +130,8 @@ class PaymentAPI(BaseAPI):
         params = {
             "currency_from": from_currency,
             "currency_to": to_currency,
-            "fiat_equivalent": "usd"
+            "fiat_equivalent": "usd",
+            **kwargs
         }
         return self._request('GET', "min-amount", params=params)
 
@@ -120,6 +144,7 @@ class PaymentAPI(BaseAPI):
             order_by: str = 'desc',
             date_from: str = None,
             date_to: str = None,
+            **kwargs
     ) -> dict:
         """
         Get payment list.
@@ -140,11 +165,17 @@ class PaymentAPI(BaseAPI):
             "sortBy": sort_by,
             "orderBy": order_by,
             "dateFrom": date_from,
-            "dateTo": date_to
+            "dateTo": date_to,
+            **kwargs
         }
         return self._request('GET', "payment", params=params)
 
-    def create_invoice(self, price_amount: Union[int, float], price_currency: str, **kwargs) -> dict:
+    def create_invoice(
+            self,
+            price_amount: Union[int, float],
+            price_currency: str,
+            **kwargs
+    ) -> dict:
         """
         Create invoice.
 
