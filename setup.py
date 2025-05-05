@@ -9,13 +9,13 @@ with open('README.md') as f:
 
 setuptools.setup(
     name="nowpayment",
-    version="1.6.0",
+    version="1.6.1",
     author="Mostafa Mosavi",
     author_email="mostafa.uwsgi@gmail.com",
     description="A NowPayments.io client for Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/its0x4d/nowpayment",
+    url="https://github.com/its0x4d/nowpayments",
     packages=setuptools.find_packages(),
     install_requires=requirements,
     classifiers=[
