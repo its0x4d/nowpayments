@@ -1,3 +1,9 @@
+"""
+NowPayments.io Python Client
+"""
+
+__version__ = "1.6.0"
+
 import hashlib
 import hmac
 import json
@@ -50,6 +56,11 @@ class NowPayments:
         :return: True if the signature is valid, False otherwise.
         :rtype: bool
         """
+        if not isinstance(data, dict):
+            raise ValueError("Data must be a dictionary")
+        if not isinstance(ipn_secret, str):
+            raise ValueError("IPN secret must be a string")
+            
         request_data = dict(sorted(data.items()))
         sorted_request_json = json.dumps(request_data, separators=(',', ':'))
         return hmac.new(

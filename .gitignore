@@ -10,3 +10,29 @@ Makefile
 dist/
 nowpayment.egg-info/
 main.py
+# Build files
+build/
+*.egg-info/
+*.egg
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
+
+# Environment files
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE specific files
+.vscode/
+*.swp
+*.swo
+.DS_Store
