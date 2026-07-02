@@ -128,6 +128,39 @@ pytest
 ruff check nowpayment tests
 ```
 
+## Releasing to PyPI
+
+Publishing runs via [`.github/workflows/publish.yml`](.github/workflows/publish.yml) when you **publish a GitHub Release**, or manually from the Actions tab (`workflow_dispatch`).
+
+### One-time setup (trusted publishing — recommended)
+
+1. On [PyPI](https://pypi.org/manage/account/publishing/), add a **trusted publisher**:
+   - PyPI project: `nowpayment`
+   - Owner: `its0x4d`
+   - Repository: `nowpayments`
+   - Workflow: `publish.yml`
+   - Environment: `pypi`
+2. On GitHub → **Settings → Environments**, create environment **`pypi`** (optional protection rules).
+
+No API token is required when trusted publishing is configured.
+
+### Fallback: API token
+
+Add repository secret **`PYPI_API_TOKEN`** (PyPI → Account → API tokens). The publish action uses it if trusted publishing is not set up.
+
+### Release steps
+
+1. Bump `version` in `pyproject.toml` and `nowpayment/__init__.py` (keep in sync).
+2. Update `CHANGELOG.md`.
+3. Commit, push, and create a GitHub Release with tag **`v1.9.0`** (must match `pyproject.toml` version without the `v`).
+4. The workflow builds with `python -m build` and uploads to PyPI.
+
+```bash
+git tag v1.9.0
+git push origin v1.9.0
+# Then create the release on GitHub for that tag
+```
+
 ## Examples
 
 ```python

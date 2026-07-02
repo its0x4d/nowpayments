@@ -1,0 +1,58 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Required only for PyPI trusted publishing (Option A). Harmless when using a token.
+  id-token: write
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify release tag matches package version
+        if: github.event_name == 'release'
+        run: |
+          PACKAGE_VERSION=$(grep '^version = ' pyproject.toml | head -1 | cut -d '"' -f 2)
+          TAG="${{ github.event.release.tag_name }}"
+          TAG="${TAG#v}"
+          if [ "$PACKAGE_VERSION" != "$TAG" ]; then
+            echo "Version mismatch: pyproject.toml has $PACKAGE_VERSION, tag is $TAG"
+            exit 1
+          fi
+
+      - name: Check PyPI credentials are configured
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          if [ -z "$PYPI_API_TOKEN" ]; then
+            echo "::error::PYPI_API_TOKEN repository secret is not set."
+            echo "Add it under Settings → Secrets and variables → Actions → New repository secret"
+            exit 1
+          fi
+
+      - name: Install build tools
+        run: python -m pip install --upgrade pip build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          packages-dir: dist/
