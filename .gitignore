@@ -1,38 +1,55 @@
+# Byte-compiled / cache
 __pycache__/
-.idea/
-.venv/
-__pycache__/*.py[cod]
-*.pyc
-test.py
-compile.py
-apigen.py
-Makefile
-dist/
-nowpayment.egg-info/
-main.py
-# Build files
+*.py[cod]
+*$py.class
+*.pyo
+
+# Distribution / packaging
 build/
-*.egg-info/
+dist/
 *.egg
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+nowpayment.egg-info/
 
-# Coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-coverage.xml
-*.cover
-
-# Environment files
-.env
-.venv
-env/
+# Virtual environments
+.venv/
 venv/
+env/
 ENV/
 
-# IDE specific files
+# Test and coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDE and editors
+.idea/
 .vscode/
 *.swp
 *.swo
 .DS_Store
+
+# Local scratch (not part of the published package)
+main.py
+compile.py
+apigen.py
+
+# Cursor local state (keep .cursor/rules/ tracked)
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**

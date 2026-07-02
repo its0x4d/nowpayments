@@ -1,0 +1,50 @@
+---
+description: Python SDK implementation patterns for nowpayment package
+globs: nowpayment/**/*.py,examples/**/*.py,tests/**/*.py
+alwaysApply: false
+---
+
+# Python SDK Patterns
+
+## Package layout
+
+- `nowpayment/apis/` — thin API wrappers; one class per NOWPayments API group.
+- `nowpayment/models.py` — request/response dataclasses or Pydantic models.
+- Shared HTTP logic lives in `BaseAPI._request` only; do not duplicate requests calls.
+
+## BaseAPI._request
+
+```python
+# BAD — replaces api key and content-type
+if headers:
+    set_headers = headers
+
+# GOOD — merge custom headers into defaults
+set_headers = {**default_headers, **(headers or {})}
+```
+
+After the request: check `response.ok`, parse JSON safely, map 4xx/5xx to `NowPaymentsAPIError`.
+
+## Method design
+
+- Required API params → explicit function arguments.
+- Optional API params → keyword-only args with `None` default; omit from payload when `None`.
+- Return typed models when stable; `dict` is acceptable only during migration.
+- `@jwt_required` for endpoints that need Bearer token per official docs.
+
+## Naming
+
+- Methods: `create_*`, `get_*`, `list_*`, `verify_*` — verbs that match REST intent.
+- Parameters: snake_case matching API field names where possible (`order_id`, not `orderId` in Python).
+
+## Docstrings
+
+- One-line summary, then Args/Returns/Raises.
+- Link to official Postman doc section when documenting new endpoints.
+- Return type in docstring must match the actual return type.
+
+## Known pitfalls (do not reintroduce)
+
+- `if id:` — use `if payment_id is not None:`.
+- `GET` with `json=` body — use `params=` unless docs require a body.
+- Wrong endpoint reuse (e.g. recurring payments ≠ `sub-partner/balance`).

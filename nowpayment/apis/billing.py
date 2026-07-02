@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import List, Union
 
 from nowpayment.apis import BaseAPI
 from nowpayment.decorators import jwt_required
@@ -59,7 +59,7 @@ class BillingAPI(BaseAPI):
             "sub_partner_id": sub_partner_id,
             **kwargs
         }
-        return self._request('POST', "sub-partner/balance", json=data)
+        return self._request('POST', "subscriptions", json=data)
 
     def get_user_balance(self, sub_partner_id: int) -> dict:
         """
@@ -77,7 +77,7 @@ class BillingAPI(BaseAPI):
     @jwt_required
     def get_users(
             self,
-            sub_partner_id: Union[int, List[int]],
+            sub_partner_id: Union[None, int, List[int]] = None,
             offset: Union[None, int] = None,
             limit: Union[None, int] = None,
             order: Union[None, str] = None
@@ -93,22 +93,22 @@ class BillingAPI(BaseAPI):
         :return: Users.
         :rtype: dict
         """
-        path = "sub-partner?"
+        params = {}
+        if sub_partner_id is not None:
+            if isinstance(sub_partner_id, int):
+                params["id"] = sub_partner_id
+            elif isinstance(sub_partner_id, list):
+                params["id"] = ",".join(str(i) for i in sub_partner_id)
+            else:
+                raise ValueError("id must be int or list of int")
+        if offset is not None:
+            params["offset"] = offset
+        if limit is not None:
+            params["limit"] = limit
+        if order is not None:
+            params["order"] = order
 
-        if isinstance(sub_partner_id, int):
-            path += f"id={sub_partner_id}"
-        elif isinstance(sub_partner_id, list):
-            path += f"id={",".join([str(i) for i in sub_partner_id])}"
-        else:
-            raise ValueError("id must be int or list of int")
-        if offset:
-            path += f"&offset={offset}"
-        if limit:
-            path += f"&limit={limit}"
-        if order:
-            path += f"&order={order}"
-
-        return self._request('GET', path)
+        return self._request('GET', "sub-partner", params=params)
 
     def get_all_transfers(
             self,
@@ -137,34 +137,28 @@ class BillingAPI(BaseAPI):
         :rtype: dict
         """
 
-        path = "sub-partner/transfers"
-        add_path = ""
-
-        if not sub_partner_id:
-            pass
-        elif isinstance(sub_partner_id, int):
-            add_path += f"id={sub_partner_id}"
-        elif isinstance(sub_partner_id, list):
-            add_path += f"id={",".join([str(i) for i in sub_partner_id])}"
-        else:
-            raise ValueError("id may be int or list of int")
+        params = {}
+        if sub_partner_id:
+            if isinstance(sub_partner_id, int):
+                params["id"] = sub_partner_id
+            elif isinstance(sub_partner_id, list):
+                params["id"] = ",".join(str(i) for i in sub_partner_id)
+            else:
+                raise ValueError("id may be int or list of int")
         if isinstance(status, str):
-            add_path += f"&status={status}"
+            params["status"] = status
         elif isinstance(status, list):
-            add_path += f"&status={",".join(status)}"
+            params["status"] = ",".join(status)
         else:
             raise ValueError("status must be str or list of str")
-        if offset:
-            add_path += f"&offset={offset}"
-        if limit:
-            add_path += f"&limit={limit}"
-        if order:
-            add_path += f"&order={order}"
+        if offset is not None:
+            params["offset"] = offset
+        if limit is not None:
+            params["limit"] = limit
+        if order is not None:
+            params["order"] = order
 
-        if add_path:
-            path += "?" + add_path
-
-        return self._request('GET', path)
+        return self._request('GET', "sub-partner/transfers", params=params)
 
     def get_transfer(self, transfer_id: int) -> dict:
         """
@@ -283,28 +277,26 @@ class BillingAPI(BaseAPI):
         :return: User payments.
         :rtype: dict
         """
-        data = {
-            "sub_partner_id": sub_partner_id,
-        }
-        if limit:
-            data["limit"] = limit
-        if page:
-            data["page"] = page
-        if id:
-            data["id"] = payment_id
-        if pay_currency:
-            data["pay_currency"] = pay_currency
-        if status:
-            data["status"] = status
-        if date_from:
-            data["date_from"] = date_from
-        if date_to:
-            data["date_to"] = date_to
-        if orderBy:
-            data["orderBy"] = orderBy
-        if sortBy:
-            data["sortBy"] = sortBy
-        return self._request('GET', "sub-partner/payments", json=data)
+        params = {"sub_partner_id": sub_partner_id}
+        if limit is not None:
+            params["limit"] = limit
+        if page is not None:
+            params["page"] = page
+        if payment_id is not None:
+            params["id"] = payment_id
+        if pay_currency is not None:
+            params["pay_currency"] = pay_currency
+        if status is not None:
+            params["status"] = status
+        if date_from is not None:
+            params["date_from"] = date_from
+        if date_to is not None:
+            params["date_to"] = date_to
+        if orderBy is not None:
+            params["orderBy"] = orderBy
+        if sortBy is not None:
+            params["sortBy"] = sortBy
+        return self._request('GET', "sub-partner/payments", params=params)
 
     @jwt_required
     def deposit_from_master_account(

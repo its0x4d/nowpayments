@@ -1,0 +1,46 @@
+---
+description: Core open-source standards for clean, maintainable code
+alwaysApply: true
+---
+
+# Open-Source Standards
+
+This is a public Python SDK. Every change must be safe for external users and easy to review.
+
+## Code quality
+
+- Prefer small, focused diffs. Do not refactor unrelated code in the same change.
+- Match existing style: naming, module layout, docstrings, and API surface patterns.
+- Use explicit types on public APIs (`Optional`, `Union`, return types).
+- Avoid magic values; use constants for URLs, defaults, and status strings.
+- No dead code, commented-out blocks, or TODO without a linked issue.
+
+## API client rules
+
+- Mirror official NOWPayments docs for paths, methods, params, and auth headers.
+- Never swallow HTTP errors; raise typed exceptions with status code and response body.
+- Merge request headers; never replace the full header dict when adding fields.
+- Use `params=` for query strings; do not hand-build URLs.
+- Do not use Python builtins as variable names (`id`, `type`, `list`).
+
+## Documentation and examples
+
+- Keep README, docstrings, and examples in sync with the code.
+- Examples must run without `TypeError` (correct parameter names and types).
+- Document required auth: API key, JWT, IP whitelist, 2FA where applicable.
+
+## Testing before merge
+
+- Add or update tests for every bug fix and new endpoint.
+- Mock HTTP; never call live NOWPayments APIs in unit tests.
+- Run lint and tests locally before considering work complete.
+
+## Dependencies
+
+- Prefer flexible lower bounds over hard pins unless a pin fixes a known breakage.
+- Do not add heavy dependencies without clear user value.
+
+## Releases
+
+- Keep version in one source of truth (`pyproject.toml` when added; until then sync `setup.py` and `__init__.py`).
+- User-facing changes belong in CHANGELOG.md.

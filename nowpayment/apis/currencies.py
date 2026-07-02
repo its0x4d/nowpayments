@@ -1,44 +1,54 @@
+from typing import Union
+
 from nowpayment.apis import BaseAPI
+from nowpayment.models import CurrencyList, parse_response
 
 
 class CurrencyAPI(BaseAPI):
 
-    def get_available_currencies(self, **kwargs) -> dict:
+    def get_available_currencies(
+        self,
+        as_model: bool = False,
+        **kwargs,
+    ) -> Union[dict, CurrencyList]:
         """
-        This is a method for obtaining information about all cryptocurrencies available for payments.
+        Get cryptocurrencies available for payments.
 
-        fixed_rate(optional) - boolean, can be true or false.
-            Returns available currencies with minimum and maximum amount of the exchange.
-
+        :param as_model: When True, return a ``CurrencyList`` model.
         :return: Available currencies.
-        :rtype: dict
         """
         params = {}
         if 'fixed_rate' in kwargs:
             params['fixed_rate'] = kwargs['fixed_rate']
-        return self._request('GET', "currencies", params=params)
+        data = self._request('GET', "currencies", params=params)
+        return parse_response(data, CurrencyList, as_model)
 
-    def get_available_currencies_v2(self) -> dict:
+    def get_available_currencies_v2(
+        self,
+        as_model: bool = False,
+    ) -> Union[dict, CurrencyList]:
         """
-        This is a method to obtain detailed information about all cryptocurrencies available for payments.
+        Get detailed information about all cryptocurrencies available for payments.
 
-        :return: All currencies.
-        :rtype: dict
+        :param as_model: When True, return a ``CurrencyList`` model.
+        :return: Detailed currency list.
         """
-        return self._request('GET', "full-currencies")
+        data = self._request('GET', "full-currencies")
+        return parse_response(data, CurrencyList, as_model)
 
-    def get_available_checked_currencies(self, **kwargs) -> dict:
+    def get_available_checked_currencies(
+        self,
+        as_model: bool = False,
+        **kwargs,
+    ) -> Union[dict, CurrencyList]:
         """
-        This is a method for obtaining information about the cryptocurrencies available for payments.
-        Shows the coins you set as available for payments in the "coins settings" tab on your personal account.
+        Get cryptocurrencies enabled in your merchant coin settings.
 
-        fixed_rate(optional) - boolean, can be true or false.
-            Returns available currencies with minimum and maximum amount of the exchange.
-
-        :return: All currencies.
-        :rtype: dict
+        :param as_model: When True, return a ``CurrencyList`` model.
+        :return: Merchant-enabled currencies.
         """
         params = {}
         if 'fixed_rate' in kwargs:
             params['fixed_rate'] = kwargs['fixed_rate']
-        return self._request('GET', "merchant/coins", params=params)
+        data = self._request('GET', "merchant/coins", params=params)
+        return parse_response(data, CurrencyList, as_model)

@@ -22,7 +22,10 @@ api.jwt_token = login["token"]
 # after 10 attempts, the payout will be cancelled.
 # You can use the `api.payout.get_payout_status` method to get the payout status
 
-verify = api.payout.verify_payout(payout_id=PAYOUT_ID, verification_code=VERIFICATION_CODE)
+verify = api.payout.verify_payout(
+    payout_id=PAYOUT_ID,
+    verification_code=VERIFICATION_CODE,
+)
 
 if verify.get("status") == "OK":
     print("Payout verified successfully")
